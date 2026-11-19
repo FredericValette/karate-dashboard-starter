@@ -4,13 +4,15 @@ import Dashboard from './components/Dashboard';
 import './App.css';
 
 function App() {
-return (
-<Router>
-<Routes>
-<Route path="/" element={<Dashboard />} />
-</Routes>
-</Router>
-);
+  // BASE_URL ist '/' lokal im Dev-Server und '/karate-dashboard-starter/'
+  // auf GitHub Pages - so matcht Route path="/" auf beiden.
+  return (
+    <Router basename={import.meta.env.BASE_URL}>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+      </Routes>
+    </Router>
+  );
 }
 
 export default App;
