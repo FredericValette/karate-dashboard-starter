@@ -30,22 +30,33 @@ jobs:
           node-version: 20
           cache: npm
 
-      # 1. Karate-Tests ausführen (nur wenn ein pom.xml im Repo liegt)
-      - name: Run Karate Tests
-        if: hashFiles('**/pom.xml') != ''
+      - name: Set up Java (für den Karate-Demo-Runner)
+        if: hashFiles('karate-demo/pom.xml') != ''
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: maven
+
+      # 1. Karate-Tests: Demo-Suite gegen eingebetteten MockServer (offline, grün in CI)
+      - name: Run Karate Tests (karate-demo)
+        if: hashFiles('karate-demo/pom.xml') != ''
+        working-directory: karate-demo
         run: |
-          mvn test \
-            -Dtest=TestsRunner \
-            -Dkarate.options="--output target/karate-reports --format json"
+          chmod +x mvnw
+          ./mvnw -B test
+
+      # Für echte Karate-Projekte (pom.xml am Repo-Root):
+      # - name: Run Karate Tests (eigenes Projekt)
+      #   run: mvn test -Dtest=TestsRunner
 
       # 2. Karate-JSON ins Dashboard-Format konvertieren
       #    (rohes Cucumber-JSON wuerde die Tabelle brechen -> Konverter nutzen)
       - name: Convert Karate Reports
         run: |
-          mkdir -p target/karate-reports public/karate-reports
-          if compgen -G "target/karate-reports/*.json" > /dev/null; then
-            node scripts/karate-to-dashboard.mjs target/karate-reports \
-              --id karate-latest --label "Letzter Karate-Lauf" \
+          if [ -d karate-demo/target/karate-reports ] && compgen -G "karate-demo/target/karate-reports/**/*.json" > /dev/null; then
+            node scripts/karate-to-dashboard.mjs karate-demo/target/karate-reports \
+              --id demo-run --label "Demo Runner (Mock-API)" \
               --out public/karate-reports
           else
             echo "Keine Karate-Reports gefunden - Dashboard nutzt die vorhandenen Reports"
