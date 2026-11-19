@@ -6,10 +6,20 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  pages: write
+  id-token: write
+  contents: read
+
+# Verhindert parallele Deployments, die sich gegenseitig ueberschreiben
+concurrency:
+  group: pages
+  cancel-in-progress: true
 
 jobs:
   test-and-deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -42,10 +52,15 @@ jobs:
       - name: Build SPA
         run: npm install && npm run build
 
-      # 4. Deployen zu GitHub Pages
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+      # 4. Deployen zu GitHub Pages (offizielle Actions; nutzt das gebaute ./dist)
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-          force_orphan: true
+          path: ./dist
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
