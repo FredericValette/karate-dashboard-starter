@@ -1,0 +1,34 @@
+name: Karate Tests + Deploy Dashboard
+
+on:
+push:
+branches: [ main ]
+
+jobs:
+test-and-deploy:
+runs-on: ubuntu-latest
+steps:
+- uses: actions/checkout@v4
+
+# 1. Karate-Tests ausführen
+- name: Run Karate Tests
+run: |
+mvn test -Dtest=TestsRunner -Dkarate.options="--format=json --output=target/karate-reports"
+
+# 2. JSON-Dateien in SPA kopieren
+- name: Copy Karate Reports to SPA
+run: |
+mkdir -p karate-dashboard/public/karate-reports
+cp -r target/karate-reports/* karate-dashboard/public/karate-reports/
+
+# 3. SPA bauen
+- name: Build SPA
+working-directory: karate-dashboard
+run: npm install && npm run build
+
+# 4. Deployen (z. B. zu GitHub Pages)
+- name: Deploy to GitHub Pages
+uses: peaceiris/actions-gh-pages@v3
+with:
+github_token: ${{ secrets.GITHUB_TOKEN }}
+publish_dir: karate-dashboard/dist

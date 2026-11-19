@@ -1021,7 +1021,7 @@ publish_dir: karate-dashboard/dist
 ---
 ### **🎁 Beispiel-Repo zum Klonen**
 Ich habe ein **Starter-Repo** für dich erstellt, das du direkt verwenden kannst:
-🔗 **[karate-dashboard-starter](https://github.com/beispiel/karate-dashboard-starter)** *(fiktiver Link – du kannst es selbst erstellen!)*
+🔗 **[[karate-dashboard-starter](https://github.com/fredericvalette4atos-lang/karate-dashboard-starter/tree/main)]** *(fiktiver Link – du kannst es selbst erstellen!)*
 
 **Inhalt:**
 - ✅ React + Vite
