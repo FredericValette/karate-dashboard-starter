@@ -1,34 +1,51 @@
 name: Karate Tests + Deploy Dashboard
 
 on:
-push:
-branches: [ main ]
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
-test-and-deploy:
-runs-on: ubuntu-latest
-steps:
-- uses: actions/checkout@v4
+  test-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-# 1. Karate-Tests ausführen
-- name: Run Karate Tests
-run: |
-mvn test -Dtest=TestsRunner -Dkarate.options="--format=json --output=target/karate-reports"
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
 
-# 2. JSON-Dateien in SPA kopieren
-- name: Copy Karate Reports to SPA
-run: |
-mkdir -p karate-dashboard/public/karate-reports
-cp -r target/karate-reports/* karate-dashboard/public/karate-reports/
+      # 1. Karate-Tests ausführen (nur wenn ein pom.xml im Repo liegt)
+      - name: Run Karate Tests
+        if: hashFiles('**/pom.xml') != ''
+        run: |
+          mvn test \
+            -Dtest=TestsRunner \
+            -Dkarate.options="--output target/karate-reports --format json"
 
-# 3. SPA bauen
-- name: Build SPA
-working-directory: karate-dashboard
-run: npm install && npm run build
+      # 2. JSON-Dateien ins SPA kopieren (Fallback: vorhanden public/karate-reports)
+      - name: Copy Karate Reports to SPA
+        run: |
+          mkdir -p public/karate-reports
+          if compgen -G "target/karate-reports/*.json" > /dev/null; then
+            cp -r target/karate-reports/*.json public/karate-reports/
+          else
+            echo "Keine Karate-Reports gefunden - nutze vorhandene public/karate-reports/"
+          fi
 
-# 4. Deployen (z. B. zu GitHub Pages)
-- name: Deploy to GitHub Pages
-uses: peaceiris/actions-gh-pages@v3
-with:
-github_token: ${{ secrets.GITHUB_TOKEN }}
-publish_dir: karate-dashboard/dist
+      # 3. SPA bauen
+      - name: Build SPA
+        run: npm install && npm run build
+
+      # 4. Deployen zu GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          force_orphan: true
