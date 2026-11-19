@@ -12,7 +12,8 @@ const loadKarateData = async () => {
 try {
 setLoading(true);
 // Option 1: Lade statische JSON-Dateien aus /public/karate-reports
-const response = await axios.get('/karate-reports/test1.json');
+// Relativer Pfad: funktioniert lokal (Vite-Dev-Server) und auf GitHub Pages (Base-Unterpfad)
+const response = await axios.get('karate-reports/test1.json');
 setTestData(response.data);
 setError(null);
 } catch (err) {
