@@ -43,20 +43,30 @@ jobs:
         if: hashFiles('karate-demo/pom.xml') != ''
         working-directory: karate-demo
         run: |
-          chmod +x mvnw
-          ./mvnw -B test
+          if command -v mvn >/dev/null 2>&1; then
+            echo "> nutze installiertes Maven"
+            mvn -ntp -B test
+          else
+            echo "> nutze Maven-Wrapper"
+            chmod +x mvnw
+            ./mvnw -ntp -B test
+          fi
 
       # Für echte Karate-Projekte (pom.xml am Repo-Root):
       # - name: Run Karate Tests (eigenes Projekt)
-      #   run: mvn test -Dtest=TestsRunner
+      #   run: mvn -ntp -B test -Dtest=TestsRunner
 
       # 2. Karate-JSON ins Dashboard-Format konvertieren
       #    (rohes Cucumber-JSON wuerde die Tabelle brechen -> Konverter nutzen)
       - name: Convert Karate Reports
         run: |
-          if [ -d karate-demo/target/karate-reports ] && compgen -G "karate-demo/target/karate-reports/**/*.json" > /dev/null; then
-            node scripts/karate-to-dashboard.mjs karate-demo/target/karate-reports \
+          if compgen -G "karate-demo/target/karate-reports/cucumber-json/*.json" > /dev/null; then
+            node scripts/karate-to-dashboard.mjs karate-demo/target/karate-reports/cucumber-json \
               --id demo-run --label "Demo Runner (Mock-API)" \
+              --out public/karate-reports
+          elif compgen -G "target/karate-reports/*.json" > /dev/null; then
+            node scripts/karate-to-dashboard.mjs target/karate-reports \
+              --id karate-latest --label "Letzter Karate-Lauf" \
               --out public/karate-reports
           else
             echo "Keine Karate-Reports gefunden - Dashboard nutzt die vorhandenen Reports"
