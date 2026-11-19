@@ -1,0 +1,54 @@
+[
+  {
+    "scenarioName": "Login Test - ungültige Zugangsdaten",
+    "status": "FAILED",
+    "duration": 880,
+    "timestamp": "2024-05-21T09:30:00Z",
+    "steps": [
+      { "name": "Given url 'https://api.example.com/login'", "status": "PASSED" },
+      { "name": "When method post (invalid credentials)", "status": "FAILED" }
+    ],
+    "error": {
+      "message": "status code was: 401, expected: 400",
+      "stackTrace": "js.Failed: status code was: 401"
+    }
+  },
+  {
+    "scenarioName": "Passwort zurücksetzen",
+    "status": "PASSED",
+    "duration": 1500,
+    "timestamp": "2024-05-21T09:30:05Z"
+  },
+  {
+    "scenarioName": "Profil aktualisieren",
+    "status": "PASSED",
+    "duration": 720,
+    "timestamp": "2024-05-21T09:30:10Z"
+  },
+  {
+    "scenarioName": "Session ungültig machen",
+    "status": "PASSED",
+    "duration": 540,
+    "timestamp": "2024-05-21T09:30:15Z"
+  },
+  {
+    "scenarioName": "Rate-Limit prüfen",
+    "status": "FAILED",
+    "duration": 3200,
+    "timestamp": "2024-05-21T09:30:20Z",
+    "steps": [
+      { "name": "Given 100 Login-Versuche", "status": "PASSED" },
+      { "name": "Then status 429", "status": "FAILED" }
+    ],
+    "error": {
+      "message": "status code was: 200, expected: 429",
+      "stackTrace": "js.Failed: status code was: 200"
+    }
+  },
+  {
+    "scenarioName": "Benutzerliste mit Pagination",
+    "status": "PASSED",
+    "duration": 990,
+    "timestamp": "2024-05-21T09:30:28Z"
+  }
+]

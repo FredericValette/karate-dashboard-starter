@@ -174,3 +174,41 @@ color: var(--text-secondary);
 .error {
 color: var(--accent-failed);
 }
+
+/* Header-Steuerung (Report-Auswahl + Live-Toggle) */
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.report-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-secondary);
+  font-size: 0.85em;
+}
+
+.report-selector select {
+  background: var(--bg-darker);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-family: inherit;
+  font-size: 1.05em;
+  cursor: pointer;
+}
+
+.report-selector select:focus {
+  outline: 1px solid #00b4ff;
+}
+
+.metric-card small {
+  display: block;
+  margin-top: 6px;
+  color: var(--text-secondary);
+  font-size: 0.35em;
+  font-weight: normal;
+}
