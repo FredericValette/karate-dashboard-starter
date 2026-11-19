@@ -1,4 +1,8 @@
 # karate-dashboard-starter
 karate-dashboard-starter
 
-korrigiert 2
+Start mit 
+```
+npm run dev
+```
+Dann im Browser : http://localhost:3001/
