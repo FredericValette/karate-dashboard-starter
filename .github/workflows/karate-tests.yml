@@ -38,14 +38,17 @@ jobs:
             -Dtest=TestsRunner \
             -Dkarate.options="--output target/karate-reports --format json"
 
-      # 2. JSON-Dateien ins SPA kopieren (Fallback: vorhanden public/karate-reports)
-      - name: Copy Karate Reports to SPA
+      # 2. Karate-JSON ins Dashboard-Format konvertieren
+      #    (rohes Cucumber-JSON wuerde die Tabelle brechen -> Konverter nutzen)
+      - name: Convert Karate Reports
         run: |
-          mkdir -p public/karate-reports
+          mkdir -p target/karate-reports public/karate-reports
           if compgen -G "target/karate-reports/*.json" > /dev/null; then
-            cp -r target/karate-reports/*.json public/karate-reports/
+            node scripts/karate-to-dashboard.mjs target/karate-reports \
+              --id karate-latest --label "Letzter Karate-Lauf" \
+              --out public/karate-reports
           else
-            echo "Keine Karate-Reports gefunden - nutze vorhandene public/karate-reports/"
+            echo "Keine Karate-Reports gefunden - Dashboard nutzt die vorhandenen Reports"
           fi
 
       # 3. SPA bauen
