@@ -1,0 +1,126 @@
+[
+  {
+    "scenarioName": "Benutzer anlegen (POST /users)",
+    "status": "PASSED",
+    "duration": 830,
+    "timestamp": "2026-11-19T16:01:26.525Z",
+    "steps": [
+      {
+        "name": "* url serverUrl + '/api/users'",
+        "status": "PASSED"
+      },
+      {
+        "name": "* request { name: 'Alice', email: 'alice@example.com' }",
+        "status": "PASSED"
+      },
+      {
+        "name": "* method post",
+        "status": "PASSED"
+      },
+      {
+        "name": "* status 201",
+        "status": "PASSED"
+      },
+      {
+        "name": "* match response == { id: '#string', name: 'Alice', email: 'alice@example.com' }",
+        "status": "PASSED"
+      }
+    ]
+  },
+  {
+    "scenarioName": "Angelegten Benutzer zuruecklesen (GET /users/{id})",
+    "status": "PASSED",
+    "duration": 58,
+    "timestamp": "2026-11-19T16:01:26.527Z",
+    "steps": [
+      {
+        "name": "* url serverUrl + '/api/users'",
+        "status": "PASSED"
+      },
+      {
+        "name": "* request { name: 'Bob', email: 'bob@example.com' }",
+        "status": "PASSED"
+      },
+      {
+        "name": "* method post",
+        "status": "PASSED"
+      },
+      {
+        "name": "* status 201",
+        "status": "PASSED"
+      },
+      {
+        "name": "* def userId = response.id",
+        "status": "PASSED"
+      },
+      {
+        "name": "* path userId",
+        "status": "PASSED"
+      },
+      {
+        "name": "* method get",
+        "status": "PASSED"
+      },
+      {
+        "name": "* status 200",
+        "status": "PASSED"
+      },
+      {
+        "name": "* match response.id == userId",
+        "status": "PASSED"
+      },
+      {
+        "name": "* match response.name == 'Bob'",
+        "status": "PASSED"
+      }
+    ]
+  },
+  {
+    "scenarioName": "Benutzerliste abfragen (GET /users)",
+    "status": "PASSED",
+    "duration": 20,
+    "timestamp": "2026-11-19T16:01:26.527Z",
+    "steps": [
+      {
+        "name": "* url serverUrl + '/api/users'",
+        "status": "PASSED"
+      },
+      {
+        "name": "* method get",
+        "status": "PASSED"
+      },
+      {
+        "name": "* status 200",
+        "status": "PASSED"
+      },
+      {
+        "name": "* match each response contains { id: '#string' }",
+        "status": "PASSED"
+      }
+    ]
+  },
+  {
+    "scenarioName": "Unbekannter Benutzer liefert 404 (GET /users/{id})",
+    "status": "PASSED",
+    "duration": 20,
+    "timestamp": "2026-11-19T16:01:26.527Z",
+    "steps": [
+      {
+        "name": "* url serverUrl + '/api/users'",
+        "status": "PASSED"
+      },
+      {
+        "name": "* path 'gibt-es-nicht'",
+        "status": "PASSED"
+      },
+      {
+        "name": "* method get",
+        "status": "PASSED"
+      },
+      {
+        "name": "* status 404",
+        "status": "PASSED"
+      }
+    ]
+  }
+]

@@ -1,1 +1,4 @@
 node_modules
+
+# Karate-Demo-Build-Ausgabe
+karate-demo/target/

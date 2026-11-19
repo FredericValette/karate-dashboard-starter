@@ -1,4 +1,17 @@
 [
-  { "id": "test1", "label": "Test Suite 1", "file": "test1.json" },
-  { "id": "test2", "label": "Test Suite 2", "file": "test2.json" }
+  {
+    "id": "test1",
+    "label": "Test Suite 1",
+    "file": "test1.json"
+  },
+  {
+    "id": "test2",
+    "label": "Test Suite 2",
+    "file": "test2.json"
+  },
+  {
+    "id": "demo-run",
+    "label": "Demo Runner (Mock-API)",
+    "file": "demo-run.json"
+  }
 ]
